@@ -1,0 +1,71 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-ink: #0a0a0f;
+  --color-paper: #fafafa;
+  --color-accent: #6366f1;
+}
+
+:root {
+  --background: #fafafa;
+  --foreground: #0a0a0f;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+.perspective-1000 { perspective: 1000px; }
+
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
+.card {
+  @apply rounded-2xl border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(10,10,15,0.04),0_8px_24px_-12px_rgba(10,10,15,0.08)];
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[#6366F1] px-5 py-2.5 text-sm font-medium text-white shadow-[0_8px_24px_-8px_rgba(99,102,241,0.6)] transition-all hover:bg-[#5558E8] hover:shadow-[0_10px_30px_-8px_rgba(99,102,241,0.75)] active:scale-[0.98] disabled:opacity-60;
+}
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-medium text-[#0A0A0F] shadow-sm transition-all hover:border-black/20 hover:bg-neutral-50 active:scale-[0.98];
+}
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-black/[0.04] hover:text-[#0A0A0F];
+}
+.input {
+  @apply w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-[#0A0A0F] placeholder:text-neutral-400 outline-none transition-all focus:border-[#6366F1] focus:ring-4 focus:ring-[#6366F1]/10;
+}
+
+.grid-bg {
+  background-image: radial-gradient(rgba(10, 10, 15, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.floaty { animation: floaty 6s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #0a0a0f 0%, #6366f1 40%, #a5b4fc 50%, #6366f1 60%, #0a0a0f 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2.4s linear infinite;
+}
