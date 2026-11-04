@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Infinity as InfinityIcon, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./theme";
 
 export function Logo({ className }: { className?: string }) {
   return (
@@ -44,9 +45,12 @@ export function AppNav() {
             ))}
           </nav>
         </div>
-        <Link href="/new" className="btn-primary !px-3.5 !py-2">
-          <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Log a coffee chat</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link href="/new" className="btn-primary !px-3.5 !py-2">
+            <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Log a coffee chat</span>
+          </Link>
+        </div>
       </div>
       <nav className="flex items-center gap-1 overflow-x-auto px-4 pb-2 sm:hidden">
         {links.map((l) => (

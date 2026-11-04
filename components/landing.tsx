@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Bell, Brain, Check, ClipboardPaste, CreditCard, Linkedin, Mail, MessageCircle, Sparkles, StickyNote, Users, X } from "lucide-react";
 import { Logo } from "./nav";
 import { FadeUp } from "./shared";
+import { ThemeToggle } from "./theme";
 import { cn } from "@/lib/utils";
 
 /* ---------------- Landing nav (overlays hero) ---------------- */
@@ -22,6 +23,7 @@ export function LandingNav() {
         </nav>
         <div className="flex items-center gap-2">
           <Link href="/dashboard" className="btn-ghost hidden sm:inline-flex">Dashboard</Link>
+          <ThemeToggle />
           <Link href="/new" className="btn-primary !px-4 !py-2">Start free</Link>
         </div>
       </div>

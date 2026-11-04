@@ -8,6 +8,7 @@ import { ArrowRight, Crown, Search, Sparkles, X } from "lucide-react";
 import { AppNav } from "@/components/nav";
 import { Avatar, CopyButton, SendButton } from "@/components/shared";
 import { generateIntroAsk } from "@/lib/ai";
+import { useIsDark } from "@/components/theme";
 import { statusOf, useContacts } from "@/lib/store";
 import type { Contact } from "@/lib/types";
 
@@ -24,6 +25,10 @@ const idOf = (v: string | GNode) => (typeof v === "string" ? v : v.id);
 export default function MapPage() {
   const { contacts } = useContacts();
   const router = useRouter();
+  const dark = useIsDark();
+  const C = dark
+    ? { c1: "#E4E4E7", c2: "#121216", c2Stroke: "rgba(255,255,255,0.35)", label: "#F4F4F5", sub: "rgba(244,244,245,0.5)", hlLabel: "#A5B4FC", link: "rgba(129,140,248,0.22)" }
+    : { c1: "#0A0A0F", c2: "#FFFFFF", c2Stroke: "rgba(10,10,15,0.35)", label: "#0A0A0F", sub: "rgba(10,10,15,0.5)", hlLabel: "#4338CA", link: "rgba(99,102,241,0.18)" };
   const wrap = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fg = useRef<any>(null);
@@ -116,7 +121,7 @@ export default function MapPage() {
               autoPauseRedraw={false}
               onEngineStop={() => fg.current?.zoomToFit(600, 80)}
               nodeRelSize={6}
-              linkColor={(l: GLink) => (hl.links.has(`${idOf(l.source)}>${idOf(l.target)}`) ? "#6366F1" : "rgba(99,102,241,0.18)")}
+              linkColor={(l: GLink) => (hl.links.has(`${idOf(l.source)}>${idOf(l.target)}`) ? "#6366F1" : C.link)}
               linkWidth={(l: GLink) => (hl.links.has(`${idOf(l.source)}>${idOf(l.target)}`) ? 3 : idOf(l.source) === "you" ? 1.4 : 0.8)}
               linkDirectionalParticles={(l: GLink) => (hl.links.has(`${idOf(l.source)}>${idOf(l.target)}`) ? 4 : idOf(l.source) === "you" ? 1 : 0)}
               linkDirectionalParticleWidth={(l: GLink) => (hl.links.has(`${idOf(l.source)}>${idOf(l.target)}`) ? 4 : 2)}
@@ -155,12 +160,12 @@ export default function MapPage() {
                 ctx.beginPath();
                 ctx.arc(n.x!, n.y!, r, 0, 2 * Math.PI);
                 if (n.tier === 0) ctx.fillStyle = "#6366F1";
-                else if (n.tier === 1) ctx.fillStyle = isHl ? "#6366F1" : "#0A0A0F";
-                else ctx.fillStyle = isHl ? "#6366F1" : "#FFFFFF";
+                else if (n.tier === 1) ctx.fillStyle = isHl ? "#6366F1" : C.c1;
+                else ctx.fillStyle = isHl ? "#6366F1" : C.c2;
                 ctx.fill();
                 if (n.tier === 2) {
                   ctx.lineWidth = 1.2;
-                  ctx.strokeStyle = isHl ? "#6366F1" : "rgba(10,10,15,0.35)";
+                  ctx.strokeStyle = isHl ? "#6366F1" : C.c2Stroke;
                   ctx.stroke();
                 }
                 if (n.tier === 1) {
@@ -181,10 +186,10 @@ export default function MapPage() {
                   ctx.textAlign = "center";
                   ctx.textBaseline = "top";
                   ctx.font = `${n.tier === 1 ? 600 : 500} ${fs}px Geist, ui-sans-serif, system-ui`;
-                  ctx.fillStyle = isHl ? "#4338CA" : "#0A0A0F";
+                  ctx.fillStyle = isHl ? C.hlLabel : C.label;
                   ctx.fillText(n.label, n.x!, n.y! + r + 3);
                   ctx.font = `400 ${fs * 0.85}px Geist, ui-sans-serif, system-ui`;
-                  ctx.fillStyle = "rgba(10,10,15,0.5)";
+                  ctx.fillStyle = C.sub;
                   ctx.fillText(n.tier === 1 ? n.sub : n.sub.split(" · ")[1] || n.sub, n.x!, n.y! + r + 3 + fs * 1.15);
                 }
                 ctx.globalAlpha = 1;

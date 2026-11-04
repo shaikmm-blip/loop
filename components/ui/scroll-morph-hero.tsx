@@ -8,12 +8,13 @@ import { ArrowDown, ArrowRight, Network } from "lucide-react";
 // --- Types ---
 export type AnimationPhase = "scatter" | "line" | "circle" | "bottom-strip";
 
+type Person = { name: string; role: string; firm: string; status: "warm" | "cooling" | "cold"; last: string; grad: string };
+
 interface FlipCardProps {
-    src: string;
+    person: Person;
     index: number;
     total: number;
     phase: AnimationPhase;
-    label: { role: string; firm: string };
     target: { x: number; y: number; rotation: number; scale: number; opacity: number };
 }
 
@@ -21,7 +22,11 @@ interface FlipCardProps {
 const IMG_WIDTH = 60;
 const IMG_HEIGHT = 85;
 
-function FlipCard({ src, index, label, target }: FlipCardProps) {
+const DOT = { warm: "bg-emerald-500", cooling: "bg-amber-500", cold: "bg-slate-400" } as const;
+const STATUS_TEXT = { warm: "Warm", cooling: "Cooling", cold: "Gone cold" } as const;
+
+function FlipCard({ person, target }: FlipCardProps) {
+    const initials = person.name.split(" ").map((p) => p[0]).join("");
     return (
         <motion.div
             animate={{
@@ -47,26 +52,38 @@ function FlipCard({ src, index, label, target }: FlipCardProps) {
                 transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
                 whileHover={{ rotateY: 180 }}
             >
-                {/* Front Face */}
+                {/* Front Face — mini profile card */}
                 <div
-                    className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-gray-200"
+                    className="absolute inset-0 flex h-full w-full flex-col items-center overflow-hidden rounded-xl border border-black/[0.06] bg-white px-1 pt-2 shadow-[0_6px_18px_-6px_rgba(10,10,15,0.25)]"
                     style={{ backfaceVisibility: "hidden" }}
                 >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt={`hero-${index}`} className="h-full w-full object-cover" />
-                    <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-transparent" />
+                    <div className={`absolute inset-x-0 top-0 h-5 bg-gradient-to-br ${person.grad} opacity-20`} />
+                    <div className="relative">
+                        <div className={`grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br ${person.grad} text-[9px] font-semibold text-white ring-2 ring-white`}>
+                            {initials}
+                        </div>
+                        <span className={`absolute -bottom-0 -right-0 h-2 w-2 rounded-full ring-[1.5px] ring-white ${DOT[person.status]}`} />
+                    </div>
+                    <p className="mt-1.5 w-full truncate text-center text-[6.5px] font-semibold leading-tight tracking-tight text-[#0A0A0F]">{person.name}</p>
+                    <p className="w-full truncate text-center text-[5.5px] leading-tight text-neutral-500">{person.role}</p>
+                    <p className="w-full truncate text-center text-[5.5px] font-medium leading-tight text-[#6366F1]">{person.firm}</p>
+                    <div className="mt-auto mb-1.5 flex gap-0.5">
+                        <span className="h-0.5 w-3 rounded-full bg-neutral-200" />
+                        <span className="h-0.5 w-2 rounded-full bg-neutral-200" />
+                    </div>
                 </div>
 
-                {/* Back Face — a mini contact label */}
+                {/* Back Face — relationship status */}
                 <div
-                    className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-[#0A0A0F] flex flex-col items-center justify-center p-1.5 border border-[#6366F1]/40"
+                    className="absolute inset-0 flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-[#6366F1]/40 bg-[#0A0A0F] p-1.5 shadow-lg"
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                 >
-                    <div className="mb-1 h-1.5 w-1.5 rounded-full bg-[#6366F1] shadow-[0_0_8px_#6366F1]" />
-                    <p className="text-[6px] font-bold uppercase tracking-widest text-[#A5B4FC] leading-tight text-center">
-                        {label.role}
+                    <div className={`mb-1 h-1.5 w-1.5 rounded-full ${DOT[person.status]} shadow-[0_0_8px_currentColor]`} />
+                    <p className="text-center text-[6px] font-bold uppercase leading-tight tracking-widest text-[#A5B4FC]">
+                        {STATUS_TEXT[person.status]}
                     </p>
-                    <p className="mt-0.5 text-[8px] font-semibold text-white leading-tight text-center">{label.firm}</p>
+                    <p className="mt-0.5 text-center text-[6px] leading-tight text-white/70">Last chat</p>
+                    <p className="text-center text-[7px] font-semibold leading-tight text-white">{person.last}</p>
                 </div>
             </motion.div>
         </motion.div>
@@ -77,52 +94,38 @@ function FlipCard({ src, index, label, target }: FlipCardProps) {
 const TOTAL_IMAGES = 20;
 const MAX_SCROLL = 3000; // Virtual scroll range
 
-const IMAGES = [
-    "https://cdn.21st.dev/assets/mirror/4d/4d1bff4ea8b9f400dff7ae405f92e15bd39ec76e9285c7d96017e64ba1de3ae1.jpg",
-    "https://cdn.21st.dev/assets/mirror/ee/ee36e332fe99d7611c43b90511db08a4f84e4545caa78e7b52e9ccffe273864b.jpg",
-    "https://cdn.21st.dev/assets/mirror/dd/dddeaa4e6132c65bf7ff99d197f792a30937b5cbfe97a2b1ee54a793684df52e.jpg",
-    "https://cdn.21st.dev/assets/mirror/48/487977107b5011b5e1c25289f6e4393ef555e1a92daee554788e9363b233ca14.jpg",
-    "https://cdn.21st.dev/assets/mirror/a1/a12509688be6c9d3b2cb26d2ea1cfce48b8a8dbf2653e17be8a3fc31bd69f162.jpg",
-    "https://cdn.21st.dev/assets/mirror/05/051f9e565b5b0b221384d9c27a0760febc3fb48d190c046adfda579f3614c958.jpg",
-    "https://cdn.21st.dev/assets/mirror/87/87d4f60a4465d19d14b8acefa46275df4ccd767ccea6d7f234ea5bad99cfec56.jpg",
-    "https://cdn.21st.dev/assets/mirror/06/0610989e0675a12c02d35aa5464e2644bf77913214b748b73a894808d2d79877.jpg",
-    "https://cdn.21st.dev/assets/mirror/fe/fe90b90751e671a9526134c4743e2fcbf6c1a24991aba273ad7418c88fc9c701.jpg",
-    "https://cdn.21st.dev/assets/mirror/2e/2e0452c1994fcc2130a1b8ef68e34b5ea52d1b35b80dde09b99349ad1de54598.jpg",
-    "https://cdn.21st.dev/assets/mirror/84/847dc523558808119dc4bbb5218ff862ae5f5b455f33e9a0304f2f5a4b2f0f2c.jpg",
-    "https://cdn.21st.dev/assets/mirror/2f/2f128763d177d6bdda3de9f0a766693406034977082bdb542138b7b74af9697b.jpg",
-    "https://cdn.21st.dev/assets/mirror/30/30f8223f1d1ecc24fc8b7a9995b8ee98449b1e9fc300c14fbccec01b6a83a0ae.jpg",
-    "https://cdn.21st.dev/assets/mirror/b4/b4df0e3e425ffce3b4f62fd7bc717e4dc90b94455f4d65d64fc07fe9721b0519.jpg",
-    "https://cdn.21st.dev/assets/mirror/90/90c625659f072e4a701c2e37fa4ca46f25c7ca8689d723e7802fe84cf17874e9.jpg",
-    "https://cdn.21st.dev/assets/mirror/6a/6aa0befc69cc3db8f3f3558d4b5e1216a5b64ceae1b86f51acf1c3f1432a8cf7.jpg",
-    "https://cdn.21st.dev/assets/mirror/dc/dc126cfd753dc217945d0ea2f915e539dfe4ffb5fdea02245d0f576b25a9c4dd.jpg",
-    "https://cdn.21st.dev/assets/mirror/ab/ab5f167fcb763aee7c3247fb8af97875998a7f519a6119da7dadd9cf73ae1a2c.jpg",
-    "https://cdn.21st.dev/assets/mirror/57/57d6e450f7068e5f3be04907dcc0815343e67df1dc82f2da0ff1c859afc1f700.jpg",
-    "https://cdn.21st.dev/assets/mirror/e4/e491359016d1494074e287dfbb55be068cffc0110017ae2257a5d4cdec193a47.jpg",
+const G = [
+    "from-indigo-500 to-violet-500",
+    "from-sky-500 to-indigo-500",
+    "from-fuchsia-500 to-pink-500",
+    "from-emerald-500 to-teal-500",
+    "from-amber-500 to-orange-500",
+    "from-slate-600 to-slate-800",
 ];
 
-const LABELS = [
-    { role: "VP", firm: "Blackstone" },
-    { role: "Partner", firm: "KKR" },
-    { role: "Founder", firm: "Cincy" },
-    { role: "Analyst", firm: "Goldman" },
-    { role: "Principal", firm: "a16z" },
-    { role: "MD", firm: "Bain Cap" },
-    { role: "Director", firm: "P&G Ventures" },
-    { role: "Associate", firm: "Evercore" },
-    { role: "Founder", firm: "Columbus" },
-    { role: "VP", firm: "Fifth Third" },
-    { role: "Partner", firm: "Sequoia" },
-    { role: "Alum", firm: "FSB '19" },
-    { role: "PM", firm: "Kroger" },
-    { role: "Associate", firm: "Lazard" },
-    { role: "Partner", firm: "CincyTech" },
-    { role: "VP", firm: "Morgan Stanley" },
-    { role: "Founder", firm: "NYC" },
-    { role: "MD", firm: "JPMorgan" },
-    { role: "Principal", firm: "Drive Cap" },
-    { role: "Analyst", firm: "Centerview" },
-];
-
+// Fictional people a student might meet in a semester
+const PEOPLE: Person[] = ([
+    { name: "Sarah Chen", role: "Vice President", firm: "Blackstone", status: "cold", last: "2 semesters ago" },
+    { name: "Marcus Lee", role: "Partner", firm: "KKR", status: "cooling", last: "6 weeks ago" },
+    { name: "Jake Morrison", role: "Founder & CEO", firm: "Lumen Health", status: "cooling", last: "45 days ago" },
+    { name: "Rachel Okafor", role: "Associate", firm: "Goldman Sachs", status: "warm", last: "2 weeks ago" },
+    { name: "Priya Nair", role: "Partner", firm: "a16z", status: "cold", last: "5 months ago" },
+    { name: "Sam Ortiz", role: "Principal", firm: "Bain Capital", status: "warm", last: "9 days ago" },
+    { name: "Ben Alvarez", role: "Director", firm: "P&G Ventures", status: "cold", last: "8 months ago" },
+    { name: "Nate Fischer", role: "Associate", firm: "Evercore", status: "cooling", last: "1 month ago" },
+    { name: "Hannah Brooks", role: "Associate", firm: "Drive Capital", status: "warm", last: "5 days ago" },
+    { name: "Marcus Reed", role: "Managing Director", firm: "Fifth Third", status: "cold", last: "7 months ago" },
+    { name: "Olivia Grant", role: "Investor", firm: "Sequoia", status: "cold", last: "1 year ago" },
+    { name: "Jordan Ellis", role: "FSB Alum '19", firm: "Evercore", status: "cold", last: "8 months ago" },
+    { name: "Leo Martin", role: "VP Digital", firm: "Kroger", status: "warm", last: "3 days ago" },
+    { name: "Mia Johnson", role: "Associate", firm: "Lazard", status: "cooling", last: "7 weeks ago" },
+    { name: "Maya Patel", role: "Partner", firm: "CincyTech", status: "warm", last: "6 days ago" },
+    { name: "Daniel Park", role: "Vice President", firm: "Morgan Stanley", status: "cold", last: "4 months ago" },
+    { name: "Ava Thompson", role: "Founder", firm: "Stealth · NYC", status: "cooling", last: "1 month ago" },
+    { name: "Chris Wang", role: "Managing Director", firm: "JPMorgan", status: "cold", last: "6 months ago" },
+    { name: "David Kim", role: "Vice President", firm: "Blackstone", status: "warm", last: "12 days ago" },
+    { name: "Grace Liu", role: "Analyst", firm: "Centerview", status: "cooling", last: "5 weeks ago" },
+] as Omit<Person, "grad">[]).map((p, i) => ({ ...p, grad: G[i % G.length] }));
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
 export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSectionId?: string }) {
@@ -228,7 +231,7 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
 
     // --- Random Scatter Positions (client-only to avoid hydration drift) ---
     const scatterPositions = useMemo(() => {
-        return IMAGES.map((_, i) => {
+        return PEOPLE.map((_, i) => {
             const r = (n: number) => {
                 const x = Math.sin(i * 9301 + n * 49297) * 233280;
                 return x - Math.floor(x);
@@ -327,7 +330,7 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
 
                 {/* Cards */}
                 <div className="relative flex items-center justify-center w-full h-full">
-                    {IMAGES.slice(0, TOTAL_IMAGES).map((src, i) => {
+                    {PEOPLE.slice(0, TOTAL_IMAGES).map((person, i) => {
                         let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
 
                         if (introPhase === "scatter") {
@@ -384,11 +387,10 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
                         return (
                             <FlipCard
                                 key={i}
-                                src={src}
+                                person={person}
                                 index={i}
                                 total={TOTAL_IMAGES}
                                 phase={introPhase}
-                                label={LABELS[i % LABELS.length]}
                                 target={target}
                             />
                         );

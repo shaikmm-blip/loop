@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -69,3 +71,83 @@ body {
   color: transparent;
   animation: shimmer 2.4s linear infinite;
 }
+
+/* ===================== DARK MODE ===================== */
+/* Most surfaces flip by remapping Tailwind's color variables; arbitrary hex classes are overridden below. */
+.dark {
+  color-scheme: dark;
+  --background: #09090b;
+  --foreground: #f4f4f5;
+
+  /* white surfaces → raised dark surface, black hairlines → white hairlines */
+  --color-white: #121216;
+  --color-black: #ffffff;
+
+  /* inverted neutral scale */
+  --color-neutral-50: #18181d;
+  --color-neutral-100: #202027;
+  --color-neutral-200: #2a2a33;
+  --color-neutral-300: #3f3f48;
+  --color-neutral-400: #74747e;
+  --color-neutral-500: #a1a1aa;
+  --color-neutral-600: #c2c2ca;
+  --color-neutral-700: #d4d4d8;
+  --color-neutral-800: #e4e4e7;
+  --color-neutral-900: #f4f4f5;
+
+  /* tinted chips: translucent backgrounds, brighter text */
+  --color-emerald-50: rgba(16, 185, 129, 0.12);
+  --color-emerald-200: rgba(16, 185, 129, 0.3);
+  --color-emerald-700: #34d399;
+  --color-amber-50: rgba(245, 158, 11, 0.12);
+  --color-amber-100: rgba(245, 158, 11, 0.2);
+  --color-amber-700: #fbbf24;
+  --color-slate-100: rgba(148, 163, 184, 0.14);
+  --color-slate-500: #94a3b8;
+  --color-slate-600: #cbd5e1;
+  --color-sky-50: rgba(56, 189, 248, 0.07);
+  --color-sky-100: rgba(56, 189, 248, 0.12);
+  --color-sky-200: rgba(56, 189, 248, 0.28);
+  --color-sky-700: #7dd3fc;
+  --color-blue-100: rgba(59, 130, 246, 0.14);
+  --color-gray-200: #27272a;
+}
+
+.dark body { background: var(--background); color: var(--foreground); }
+
+/* text that must stay white even though --color-white is now dark */
+.dark .text-white { color: #ffffff; }
+.dark .text-white\/50 { color: rgba(255, 255, 255, 0.5); }
+.dark .text-white\/60 { color: rgba(255, 255, 255, 0.6); }
+.dark .text-white\/85 { color: rgba(255, 255, 255, 0.85); }
+.dark .border-white\/15 { border-color: rgba(255, 255, 255, 0.15); }
+.dark .border-white\/40 { border-color: rgba(255, 255, 255, 0.4); }
+.dark .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
+.dark .hover\:bg-white\/10:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+/* arbitrary brand hexes */
+.dark .bg-\[\#FAFAFA\] { background-color: #09090b; }
+.dark .text-\[\#0A0A0F\] { color: #f4f4f5; }
+.dark .bg-\[\#0A0A0F\] { background-color: #1c1c25; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.dark .bg-\[\#0A0A0F\]\/40 { background-color: rgba(0, 0, 0, 0.6); }
+.dark .bg-\[\#FFFDF7\] { background-color: #1a1813; }
+.dark .text-\[\#3730A3\] { color: #c7d2fe; }
+.dark .text-\[\#6366F1\] { color: #818cf8; }
+.dark .from-\[\#FAFAFA\] { --tw-gradient-from: #09090b; }
+.dark .to-\[\#FAFAFA\] { --tw-gradient-to: #09090b; }
+.dark .bg-neutral-800 { background-color: #3f3f46; }
+
+/* component classes built with @apply */
+.dark .btn-primary { color: #ffffff; }
+.dark .btn-secondary { color: #f4f4f5; }
+.dark .btn-ghost:hover,
+.dark .input { color: #f4f4f5; }
+.dark .card {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.8);
+}
+.dark .glass { background: rgba(14, 14, 18, 0.72); }
+.dark .grid-bg { background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px); }
+.dark .shimmer {
+  background-image: linear-gradient(90deg, #f4f4f5 0%, #818cf8 40%, #c7d2fe 50%, #818cf8 60%, #f4f4f5 100%);
+}
+.dark ::selection { background: rgba(99, 102, 241, 0.4); }
