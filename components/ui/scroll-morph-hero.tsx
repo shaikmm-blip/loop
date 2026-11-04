@@ -271,8 +271,10 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
     };
 
     // Size the intro headline to the open space inside the card circle so it never collides with the cards.
-    const circleR = Math.min(Math.min(containerSize.width, containerSize.height) * 0.35, 350);
-    const introWidth = containerSize.width ? Math.max(150, 2 * (circleR - 50)) : 520;
+    const { width: cw, height: ch } = containerSize;
+    const ovalRx = Math.max(60, Math.min(Math.max(Math.min(cw, ch) * 0.35, cw * 0.34), 560, cw / 2 - 45));
+    const ovalRy = Math.max(60, Math.min(ch * 0.34, 360, ch / 2 - 90));
+    const introWidth = cw ? Math.max(150, 2 * (ovalRx - 55)) : 520;
     const introFont = Math.min(36, Math.max(16, introWidth / 9.5));
 
     return (
@@ -354,13 +356,14 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
                             const isMobile = containerSize.width < 768;
                             const minDimension = Math.min(containerSize.width, containerSize.height);
 
-                            const circleRadius = Math.min(minDimension * 0.35, 350);
+                            // Wide oval: stretches horizontally so the intro headline fits inside it
                             const circleAngle = (i / TOTAL_IMAGES) * 360;
                             const circleRad = (circleAngle * Math.PI) / 180;
+                            const normal = (Math.atan2(Math.sin(circleRad) / ovalRy, Math.cos(circleRad) / ovalRx) * 180) / Math.PI;
                             const circlePos = {
-                                x: Math.cos(circleRad) * circleRadius,
-                                y: Math.sin(circleRad) * circleRadius,
-                                rotation: circleAngle + 90,
+                                x: Math.cos(circleRad) * ovalRx,
+                                y: Math.sin(circleRad) * ovalRy,
+                                rotation: normal + 90,
                             };
 
                             const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
