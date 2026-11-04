@@ -36,7 +36,7 @@ body {
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[#6366F1] px-5 py-2.5 text-sm font-medium text-white shadow-[0_8px_24px_-8px_rgba(99,102,241,0.6)] transition-all hover:bg-[#5558E8] hover:shadow-[0_10px_30px_-8px_rgba(99,102,241,0.75)] active:scale-[0.98] disabled:opacity-60;
+  @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#6366F1] px-5 py-2.5 text-sm font-medium text-white shadow-[0_8px_24px_-8px_rgba(99,102,241,0.6)] transition-all hover:bg-[#5558E8] hover:shadow-[0_10px_30px_-8px_rgba(99,102,241,0.75)] active:scale-[0.98] disabled:opacity-60;
 }
 .btn-secondary {
   @apply inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-medium text-[#0A0A0F] shadow-sm transition-all hover:border-black/20 hover:bg-neutral-50 active:scale-[0.98];

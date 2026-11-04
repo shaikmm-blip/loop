@@ -270,6 +270,11 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
         document.getElementById(nextSectionId)?.scrollIntoView({ behavior: "smooth" });
     };
 
+    // Size the intro headline to the open space inside the card circle so it never collides with the cards.
+    const circleR = Math.min(Math.min(containerSize.width, containerSize.height) * 0.35, 350);
+    const introWidth = containerSize.width ? Math.max(150, 2 * (circleR - 50)) : 520;
+    const introFont = Math.min(36, Math.max(16, introWidth / 9.5));
+
     return (
         <div ref={containerRef} className="relative w-full h-full bg-[#FAFAFA] overflow-hidden">
             {/* soft indigo glow */}
@@ -277,8 +282,12 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
 
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
                 {/* Intro Text (Fades out) */}
-                <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2 px-6">
+                <div
+                    className="absolute z-20 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2"
+                    style={{ width: introWidth }}
+                >
                     <motion.h1
+                        style={{ fontSize: introFont, textWrap: "balance" }}
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={
                             introPhase === "circle" && morphValue < 0.5
@@ -286,7 +295,7 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
                                 : { opacity: 0, filter: "blur(10px)" }
                         }
                         transition={{ duration: 1 }}
-                        className="text-2xl font-semibold tracking-tight text-[#0A0A0F] md:text-4xl"
+                        className="font-semibold leading-[1.1] tracking-tight text-[#0A0A0F]"
                     >
                         You meet 50 people a semester.
                     </motion.h1>
@@ -294,7 +303,8 @@ export default function IntroAnimation({ nextSectionId = "gone-cold" }: { nextSe
                         initial={{ opacity: 0 }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.6 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-4 text-[10px] md:text-xs font-bold tracking-[0.2em] text-neutral-500"
+                        style={{ textWrap: "balance" }}
+                        className="mt-3 text-[9px] sm:text-[10px] md:text-xs font-bold leading-relaxed tracking-[0.2em] text-neutral-500"
                     >
                         SCROLL TO SEE WHAT HAPPENS TO THEM
                     </motion.p>
